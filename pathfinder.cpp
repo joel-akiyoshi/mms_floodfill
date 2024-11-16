@@ -12,16 +12,17 @@ char dir_chars[4] = {'n', 'e', 's', 'w'};
 int dir_mask[4] = {0b1000, 0b0100, 0b0010, 0b0001};
 
 
-
 // Queue functions
 void initQueue(Queue *q) { //initalize empty queue
     // IMPLEMENT THIS
 }
 
+
 bool isQEmpty(Queue q) {
     // IMPLEMENT THIS
     return true;
 }
+
 
 // clockwise and counterclockwise step functions
 Direction clockwiseStep(Direction initial_direction) {
@@ -31,7 +32,7 @@ Direction clockwiseStep(Direction initial_direction) {
 
 Direction counterClockwiseStep(Direction initial_direction) {
     API::turnLeft();
-    return static_cast<Direction>((initial_direction - 1) % 4);
+    return static_cast<Direction>((initial_direction + 3) % 4);
 }
 
 
@@ -44,18 +45,21 @@ void scanWalls(Maze* maze) { // fill in code for changing value of the cell wall
     if (API::wallFront()) {
         // bitwise OR the current cell walls attribute, with the proper mask
         maze->cellWalls[current_y][current_x] |= dir_mask[current_direction];
+        std::cerr << "at position: " << current_x << ", " << current_y << ", " << "wall in front" << std::endl;
     }
 
     if (API::wallRight()) {
         // calculate the "right" direction with modulo
         Direction right_direction = static_cast<Direction>((current_direction + 1) % 4);
         maze->cellWalls[current_y][current_x] |= dir_mask[right_direction];
+        std::cerr << "at position: " << current_x << ", " << current_y << ", " << "wall on right" << std::endl;
     }
 
     if (API::wallLeft()) {
         // calculate the "left" direction with modulo
-        Direction left_direction = static_cast<Direction>((current_direction - 1) % 4);
+        Direction left_direction = static_cast<Direction>((current_direction + 3) % 4);
         maze->cellWalls[current_y][current_x] |= dir_mask[left_direction];
+        std::cerr << "at position: " << current_x << ", " << current_y << ", " << "wall on left" << std::endl;
     }
 }
 
@@ -85,19 +89,31 @@ void updateSimulator(Maze maze) { // redraws the maze in simulator after each lo
     }
 }
 
-/*
+
 void updateMousePos(Coord* pos, Direction dir) {
     // depending on the mouse direction, increment position by one
-    if (dir == NORTH)
+    if (dir == NORTH) {
         // increment in some direction
-    if (dir == SOUTH)
+        pos->y++;
+    }
+
+    if (dir == SOUTH) {
         // increment in some direction
-    if (dir == WEST)
+        pos->y--;
+    }
+
+    if (dir == WEST) {
         // increment in some direction
-    if (dir == EAST)
+        pos->x--;
+    }
+
+    if (dir == EAST) {
         // increment in some direction
+        pos->x++;
+    }
 }
 
+/*
 CellList* getNeighborCells(Maze* maze, Coord c) { //to be called in a while loop within Floodfill when setting each cell
     
 };
@@ -105,8 +121,21 @@ CellList* getNeighborCells(Maze* maze, Coord c) { //to be called in a while loop
 void floodFill(Maze* maze, bool to_start) { // function to be called everytime you move into a new cell
     
 }
-
 */
+
+#include <bitset>  // for std::bitset
+
+void print_arr(int arr[MAZE_SIZE][MAZE_SIZE]) {
+    // Print from bottom to top, so (0, 0) is at the bottom-left
+    for (int y = 0; y < MAZE_SIZE; y++) {  // Loop over rows (y) from bottom to top
+        for (int x = 0; x < MAZE_SIZE; x++) {  // Loop over columns (x) from left to right
+            // Print each element as a binary string using std::bitset (for 16-bit values)
+            std::cerr << std::bitset<4>(arr[MAZE_SIZE - 1 - y][x]) << " ";
+        }
+        std::cerr << std::endl;
+    }
+}
+
 
 
 void log(const std::string& text) {
@@ -119,24 +148,33 @@ int main(int argc, char* argv[]) {
     API::setText(0, 0, "START");
 
     Maze testMaze;
-
     for (int i = 0; i < MAZE_SIZE; i++) {
         for (int j = 0; j < MAZE_SIZE; j++) {
             testMaze.cellWalls[i][j] = 0;
         }
     }
 
-    testMaze.cellWalls[1][1] = 0b001;
+    print_arr(testMaze.cellWalls);
 
-    updateSimulator(testMaze);
+    Maze* mazePtr = &testMaze;
+    
 
     while (true) {
+        scanWalls(mazePtr);
+        print_arr(testMaze.cellWalls);
+        updateSimulator(testMaze);
+
         if (!API::wallLeft()) {
-            API::turnLeft();
+            // API::turnLeft();
+            mazePtr->mouse_dir = counterClockwiseStep(mazePtr->mouse_dir);
+
         }
         while (API::wallFront()) {
-            API::turnRight();
+            // API::turnRight();
+            mazePtr->mouse_dir = clockwiseStep(mazePtr->mouse_dir);
         }
+
         API::moveForward();
+        updateMousePos(&mazePtr->mouse_pos, mazePtr->mouse_dir);
     }
 }
