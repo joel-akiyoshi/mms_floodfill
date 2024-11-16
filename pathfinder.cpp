@@ -1,10 +1,8 @@
 #include <iostream>
 #include <string>
 
+#include "pathfinder.h"
 #include "API.h"
-
-
-const int MAZE_SIZE = 16;
 
 // direction
 char dir_chars[4] = {'n', 'e', 's', 'w'};
@@ -13,62 +11,16 @@ char dir_chars[4] = {'n', 'e', 's', 'w'};
 // also allows you to bitwise AND
 int dir_mask[4] = {0b1000, 0b0100, 0b0010, 0b0001};
 
-enum Direction {
-    NORTH = 0,
-    EAST = 1,
-    SOUTH = 2,
-    WEST = 3
-};
-
-enum DirectionBitmask {
-    NORTH_MASK = 0b1000,
-    EAST_MASK  = 0b0100,
-    SOUTH_MASK = 0b0010,
-    WEST_MASK  = 0b0001
-};
-
-struct Coord {
-    int x;
-    int y;
-};
-
-struct Cell {
-    Coord pos;
-    Direction dir;
-};
-
-struct CellList {
-    int size;
-    Cell* cells;
-};
-
-struct Queue {
-    int head;
-    int tail;
-    // Cell object array with max size
-    // Two int objects for head and tail
-};
-
-struct Maze {
-    Coord mouse_pos;
-    Direction mouse_dir;
-
-    // 2, 2D arrays for distances of each cell, and values for cell walls
-    int cellWalls[MAZE_SIZE][MAZE_SIZE];
-    int distances[MAZE_SIZE][MAZE_SIZE];
-
-    Coord* goalPos;
-};
-
 
 
 // Queue functions
 void initQueue(Queue *q) { //initalize empty queue
-    
+    // IMPLEMENT THIS
 }
 
 bool isQEmpty(Queue q) {
-    
+    // IMPLEMENT THIS
+    return true;
 }
 
 // clockwise and counterclockwise step functions
