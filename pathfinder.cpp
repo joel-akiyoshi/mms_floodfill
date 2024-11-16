@@ -3,6 +3,7 @@
 
 #include "API.h"
 
+
 const int MAZE_SIZE = 16;
 
 // direction
@@ -59,6 +60,8 @@ struct Maze {
     Coord* goalPos;
 };
 
+/*
+
 // Queue functions
 void initQueue(Queue *q) { //initalize empty queue
     
@@ -67,6 +70,7 @@ void initQueue(Queue *q) { //initalize empty queue
 bool isQEmpty(Queue q) {
     
 }
+
 
 
 
@@ -83,25 +87,35 @@ void scanWalls(Maze* maze) { // fill in code for changing value of the cell wall
     }
 }
 
+*/
+
 void updateSimulator(Maze maze) { // redraws the maze in simulator after each loop in main
     for(int x = 0; x < MAZE_SIZE; x++) 
     {
         for(int y = 0; y < MAZE_SIZE; y++) 
         {
             if (maze.cellWalls[y][x] & NORTH_MASK)
-                // API set walls for some direction
+                // API set walls for NORTH
+                API::setWall(x, y, dir_chars[NORTH]);
+
             if (maze.cellWalls[y][x] & EAST_MASK)
-                // API set walls for some direction
+                // API set walls for EAST
+                API::setWall(x, y, dir_chars[EAST]);
+
             if (maze.cellWalls[y][x] & SOUTH_MASK)
-                // API set walls for some direction
+                // API set walls for SOUTH
+                API::setWall(x, y, dir_chars[SOUTH]);
+
             if (maze.cellWalls[y][x] & WEST_MASK)
-                // API set walls for some direction
+                // API set walls for WEST
+                API::setWall(x, y, dir_chars[WEST]);
         }
     }
 }
 
+/*
 void updateMousePos(Coord* pos, Direction dir) {
-    //depending on the mouse direction, increment position by one
+    // depending on the mouse direction, increment position by one
     if (dir == NORTH)
         // increment in some direction
     if (dir == SOUTH)
@@ -120,36 +134,7 @@ void floodFill(Maze* maze, bool to_start) { // function to be called everytime y
     
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 void log(const std::string& text) {
@@ -159,7 +144,20 @@ void log(const std::string& text) {
 int main(int argc, char* argv[]) {
     log("Running...");
     API::setColor(0, 0, 'G');
-    API::setText(0, 0, "abc");
+    API::setText(0, 0, "START");
+
+    Maze testMaze;
+
+    for (int i = 0; i < MAZE_SIZE; i++) {
+        for (int j = 0; j < MAZE_SIZE; j++) {
+            testMaze.cellWalls[i][j] = 0;
+        }
+    }
+
+    testMaze.cellWalls[15][2] = 0b001;
+
+    updateSimulator(testMaze);
+
     while (true) {
         if (!API::wallLeft()) {
             API::turnLeft();
