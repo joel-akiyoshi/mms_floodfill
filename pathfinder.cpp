@@ -60,7 +60,7 @@ struct Maze {
     Coord* goalPos;
 };
 
-/*
+
 
 // Queue functions
 void initQueue(Queue *q) { //initalize empty queue
@@ -71,23 +71,43 @@ bool isQEmpty(Queue q) {
     
 }
 
+// clockwise and counterclockwise step functions
+Direction clockwiseStep(Direction initial_direction) {
+    API::turnRight();
+    return static_cast<Direction>((initial_direction + 1) % 4);
+}
 
+Direction counterClockwiseStep(Direction initial_direction) {
+    API::turnLeft();
+    return static_cast<Direction>((initial_direction - 1) % 4);
+}
 
 
 // Maze functions
 void scanWalls(Maze* maze) { // fill in code for changing value of the cell walls
+    Direction current_direction = maze->mouse_dir;
+    int current_x = maze->mouse_pos.x;
+    int current_y = maze->mouse_pos.y;
+
     if (API::wallFront()) {
-        
+        // bitwise OR the current cell walls attribute, with the proper mask
+        maze->cellWalls[current_y][current_x] |= dir_mask[current_direction];
     }
+
     if (API::wallRight()) {
-        
+        // calculate the "right" direction with modulo
+        Direction right_direction = static_cast<Direction>((current_direction + 1) % 4);
+        maze->cellWalls[current_y][current_x] |= dir_mask[right_direction];
     }
+
     if (API::wallLeft()) {
-        
+        // calculate the "left" direction with modulo
+        Direction left_direction = static_cast<Direction>((current_direction - 1) % 4);
+        maze->cellWalls[current_y][current_x] |= dir_mask[left_direction];
     }
 }
 
-*/
+
 
 void updateSimulator(Maze maze) { // redraws the maze in simulator after each loop in main
     for(int x = 0; x < MAZE_SIZE; x++) 
@@ -154,7 +174,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    testMaze.cellWalls[15][2] = 0b001;
+    testMaze.cellWalls[1][1] = 0b001;
 
     updateSimulator(testMaze);
 
