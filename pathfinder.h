@@ -72,17 +72,16 @@ void initQueue(Queue* q);  // Initialize the queue
 bool isQEmpty(Queue q);  // Check if the queue is empty
 
 // Functions for clockwise and counterclockwise movement
-Direction clockwiseStep(Direction initial_direction);  // return new direction
-Direction counterClockwiseStep(Direction initial_direction);  // return new direction
+Direction clockwiseStep(Direction initialDirection);  // return new direction
+Direction counterClockwiseStep(Direction initialDirection);  // return new direction
 
 // Maze-related functions
 void scanWalls(Maze* maze);  // Detect and update walls (in memory) around the mouse
 void updateSimulator(Maze maze);  // Update the maze simulator based on mouse's memory
 void updateMousePos(Coord* pos, Direction dir);
 
-void log(const std::string& text);  // print to the mms output
-
 CellList* getNeighborCells(Maze* maze, Coord c);
+Cell getBestCell(CellList* candidateCells, Maze* maze);
 void floodFill(Maze* maze, bool to_start);
 
 #endif // PATHFINDER_H

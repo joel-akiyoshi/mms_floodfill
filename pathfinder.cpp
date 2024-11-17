@@ -22,12 +22,12 @@ bool isQEmpty(Queue q) {
 }
 
 // Movement functions
-Direction clockwiseStep(Direction initial_direction) {
-    return static_cast<Direction>((initial_direction + 1) % 4);
+Direction clockwiseStep(Direction initialDirection) {
+    return static_cast<Direction>((initialDirection + 1) % 4);
 }
 
-Direction counterClockwiseStep(Direction initial_direction) {
-    return static_cast<Direction>((initial_direction + 3) % 4);
+Direction counterClockwiseStep(Direction initialDirection) {
+    return static_cast<Direction>((initialDirection + 3) % 4);
 }
 
 
@@ -144,22 +144,29 @@ CellList* getNeighborCells(Maze* maze, Coord c) {
     return neighbors;
 }
 
+Cell getBestCell(CellList* candidateCells, Maze* maze) {
+    Cell bestCell = candidateCells->cells[0];
+    int bestDistance = maze->distances[bestCell.pos.y][bestCell.pos.x];  // distance of the first cell.
+
+    // iterate through candidateCells
+    for (int i = 1; i < candidateCells->size; i++) {
+        Cell currentCell = candidateCells->cells[i];
+        int currentDistance = maze->distances[currentCell.pos.y][currentCell.pos.x];
+        
+        // If the current cell has a lower distance, update the bestCell.
+        if (currentDistance < bestDistance) {
+            bestCell = currentCell;
+            bestDistance = currentDistance;
+        }
+    }
+
+    return bestCell;  // Return the cell with the lowest distance.
+}
+
 
 void floodFill(Maze* maze, bool to_start) { // function to be called everytime you move into a new cell
     
 }
-
-
-void print_arr(int arr[MAZE_SIZE][MAZE_SIZE]) {
-    // Print from bottom to top, so (0, 0) is at the bottom-left
-    for (int y = 0; y < MAZE_SIZE; y++) {  // Loop over rows (y) from bottom to top
-        for (int x = 0; x < MAZE_SIZE; x++) {  // Loop over columns (x) from left to right
-            std::cerr << arr[MAZE_SIZE - 1 - y][x] << " ";
-        }
-        std::cerr << std::endl;
-    }
-}
-
 
 
 void log(const std::string& text) {
