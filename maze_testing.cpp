@@ -4,28 +4,43 @@
 #include "API.h"
 #include "pathfinder.h"
 
-void print_arr(int arr[MAZE_SIZE][MAZE_SIZE]) {
+void initializeMaze(Maze* maze) {
+    // Initialize maze with 0 for no walls, and walls represented by 1 for simplicity
     for (int i = 0; i < MAZE_SIZE; i++) {
         for (int j = 0; j < MAZE_SIZE; j++) {
-            std::cout << arr[i][j] << " ";  // Print the element
+            maze->cellWalls[i][j] = 0;  // No walls initially
         }
-        std::cout << std::endl;  // Move to the next line after each row
     }
 }
 
-void scanWallsTest() {
+void testGetNeighborCells(Maze* maze, Coord c) {
+    CellList* neighbors = getNeighborCells(maze, c);
 
+    // Print out the neighbors
+    printf("Neighbors for cell (%d, %d):\n", c.x, c.y);
+    for (int i = 0; i < neighbors->size; i++) {
+        Cell cell = neighbors->cells[i];
+        printf("Neighbor at (%d, %d), Direction: %d\n", cell.pos.x, cell.pos.y, cell.dir);
+    }
+
+    // Free allocated memory for neighbors
+    free(neighbors->cells);
+    free(neighbors);
 }
 
 int main() {
-    Maze testMaze;
+    Maze maze;
+    initializeMaze(&maze);
 
-    testMaze.cellWalls[MAZE_SIZE][MAZE_SIZE] = {0};  // Initialize to 0
+    // Test with a few coordinates
+    Coord testCoord1 = {1, 1};  // Cell at (1, 1)
+    testGetNeighborCells(&maze, testCoord1);
 
-    // Print the cellWalls
-    print_arr(testMaze.cellWalls);
+    Coord testCoord2 = {2, 2};  // Cell at (2, 2)
+    testGetNeighborCells(&maze, testCoord2);
 
-    testMaze.cellWalls[0][0] = 0b1000;  // put a wall on the North
+    Coord testCoord3 = {0, 0};  // Cell at (0, 0)
+    testGetNeighborCells(&maze, testCoord3);
 
     return 0;
 }
