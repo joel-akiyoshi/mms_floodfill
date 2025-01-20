@@ -52,8 +52,7 @@ struct CellList {
 struct Queue {
     int head;
     int tail;
-    // Cell object array with max size
-    Cell cells[MAX_QUEUE_SIZE];  // assuming Cell array will be used for storing queue elements
+    Coord coords[MAX_QUEUE_SIZE];
 };
 
 // Maze structure

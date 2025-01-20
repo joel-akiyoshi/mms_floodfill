@@ -43,6 +43,22 @@ void testGetNeighborCells(Maze* maze, Coord c) {
     free(neighbors);
 }
 
+void print_arr(int arr[MAZE_SIZE][MAZE_SIZE]) {
+    // Print from bottom to top, so (0, 0) is at the bottom-left
+    for (int y = 0; y < MAZE_SIZE; y++) {  // Loop over rows (y) from bottom to top
+        for (int x = 0; x < MAZE_SIZE; x++) {  // Loop over columns (x) from left to right
+            std::cerr << arr[MAZE_SIZE - 1 - y][x] << " ";
+        }
+        std::cerr << std::endl;
+    }
+}
+
+
+
+void log(const std::string& text) {
+    std::cerr << text << std::endl;
+}
+
 int main() {
     Maze maze;
     for (int i = 0; i < MAZE_SIZE; i++) {
